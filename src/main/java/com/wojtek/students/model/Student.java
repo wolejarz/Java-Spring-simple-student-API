@@ -1,4 +1,4 @@
-package com.wojtek.students;
+package com.wojtek.students.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
