@@ -13,4 +13,11 @@ public class StudentController {
     public String sayHello(){
         return "Welcome!";
     }
+    @GetMapping("/student")
+    public Student getStudent() {
+        Student student = new Student();
+        student.setFirstName("Wojciech");
+        student.setLastName("Olejarz");
+        student.setEmail("hhh@fff.com");
+    }
 }
