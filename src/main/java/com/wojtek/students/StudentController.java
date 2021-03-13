@@ -19,5 +19,6 @@ public class StudentController {
         student.setFirstName("Wojciech");
         student.setLastName("Olejarz");
         student.setEmail("hhh@fff.com");
+        return student;
     }
 }
