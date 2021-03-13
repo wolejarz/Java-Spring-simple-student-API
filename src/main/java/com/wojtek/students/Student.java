@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Student {
-    @Id;
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long Id;
     private String firstName;
