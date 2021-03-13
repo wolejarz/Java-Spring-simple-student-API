@@ -3,6 +3,7 @@ package com.wojtek.students.controller;
 import com.wojtek.students.repository.StudentRepository;
 import com.wojtek.students.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class StudentController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Student addStudent(@RequestBody @Valid Student student) {
         return studentRepository.save(student);
     }
@@ -37,7 +39,8 @@ public class StudentController {
     public ResponseEntity<Student> getStudent(@PathVariable Long id) {
         return studentRepository.findById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
+
     }
 
 }
