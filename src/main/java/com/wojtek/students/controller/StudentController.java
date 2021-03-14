@@ -3,6 +3,7 @@ package com.wojtek.students.controller;
 import com.wojtek.students.repository.StudentRepository;
 import com.wojtek.students.model.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,15 @@ public class StudentController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
 
+    }
+    @DeleteMapping("/id")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteStudent(@PathVariable Long id){
+        try {
+            studentRepository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e){
+        }
     }
 
 }
