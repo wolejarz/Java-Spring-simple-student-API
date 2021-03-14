@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,5 +53,30 @@ public class StudentController {
         catch (EmptyResultDataAccessException e){
         }
     }
+    @PutMapping("/id")
+    public ResponseEntity<Student> putStudent(@PathVariable Long id, @RequestBody Student student) {
+        return studentRepository.findById(id)
+                .map(studentFromDB ->{
+                    studentFromDB.setFirstName(student.getFirstName());
+                    studentFromDB.setLastName(student.getLastName());
+                    studentFromDB.setEmail(student.getEmail());
+                    studentRepository.save(studentFromDB);
+                    return ResponseEntity.ok().body(studentFromDB);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
+    @PutMapping("/id")
+    public ResponseEntity<Student> patchStudent(@PathVariable Long id, @RequestBody Student student) {
+        return studentRepository.findById(id)
+                .map(studentFromDB ->{
+                    if (StringUtils.hasText(student.getFirstName()))
+                    studentFromDB.setFirstName(student.getFirstName());
+                    if (StringUtils.hasText(student.getLastName()))
+                    studentFromDB.setLastName(student.getLastName());
+                    if (StringUtils.hasText(student.getEmail()))
+                    studentFromDB.setEmail(student.getEmail());
+                    studentRepository.save(studentFromDB);
+                    return ResponseEntity.ok().body(studentFromDB);
+                }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }
