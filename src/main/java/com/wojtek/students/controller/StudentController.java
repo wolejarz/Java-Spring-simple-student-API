@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("students")
+@RequestMapping("/students")
 public class StudentController {
 
 
@@ -65,18 +65,5 @@ public class StudentController {
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/id")
-    public ResponseEntity<Student> patchStudent(@PathVariable Long id, @RequestBody Student student) {
-        return studentRepository.findById(id)
-                .map(studentFromDB ->{
-                    if (StringUtils.hasText(student.getFirstName()))
-                    studentFromDB.setFirstName(student.getFirstName());
-                    if (StringUtils.hasText(student.getLastName()))
-                    studentFromDB.setLastName(student.getLastName());
-                    if (StringUtils.hasText(student.getEmail()))
-                    studentFromDB.setEmail(student.getEmail());
-                    studentRepository.save(studentFromDB);
-                    return ResponseEntity.ok().body(studentFromDB);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+
 }
