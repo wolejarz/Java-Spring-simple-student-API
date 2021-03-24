@@ -54,8 +54,8 @@ public class StudentController {
         }
     }
     @PutMapping("/id")
-    public ResponseEntity<Student> putStudent(@PathVariable Long id, @RequestBody Student student) {
-        return studentRepository.findById(id)
+    public ResponseEntity<Student> putStudent(@PathVariable Long Id, @RequestBody Student student) {
+        return studentRepository.findById(Id)
                 .map(studentFromDB ->{
                     studentFromDB.setFirstName(student.getFirstName());
                     studentFromDB.setLastName(student.getLastName());
