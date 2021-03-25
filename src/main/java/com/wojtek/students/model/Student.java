@@ -1,22 +1,21 @@
 package com.wojtek.students.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@SequenceGenerator(name="seqIdGen", initialValue = 20000,allocationSize = 1)
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "seqIdGen")
     private long Id;
     @NotNull
     private String firstName;
     @NotNull
     private String lastName;
     @Email
+    @Column(unique = true)
     private String email;
 
     public long getId() {
