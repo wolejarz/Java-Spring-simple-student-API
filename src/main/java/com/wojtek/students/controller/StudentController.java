@@ -1,69 +1,52 @@
 package com.wojtek.students.controller;
 
-import com.wojtek.students.repository.StudentRepository;
-import com.wojtek.students.model.Student;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 
+import com.wojtek.students.model.Student;
+import com.wojtek.students.service.StudentService;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
+    private final StudentService studentService;
 
-    private final StudentRepository studentRepository;
-
-    @Autowired
-    public StudentController(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
     }
 
     @GetMapping
-    public List<Student> getStudents() {
-        return studentRepository.findAll();
+    public List<Student> getStudents(@RequestParam(required = false) Student.Status status) {
+        return studentService.getStudents(status);
     }
 
-    @PostMapping
+        @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Student addStudent(@RequestBody @Valid Student student) {
-        return studentRepository.save(student);
+        return studentService.addStudent(student);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Student> getStudent(@PathVariable Long id) {
-        return studentRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public Student getStudent(@PathVariable Long id) {
+        return studentService.getStudent(id);
 
     }
     @DeleteMapping("/id")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteStudent(@PathVariable Long id){
-        try {
-            studentRepository.deleteById(id);
-        }
-        catch (EmptyResultDataAccessException e){
-        }
+        studentService.deleteStudent(id);
     }
     @PutMapping("/id")
-    public ResponseEntity<Student> putStudent(@PathVariable Long Id, @RequestBody Student student) {
-        return studentRepository.findById(Id)
-                .map(studentFromDB ->{
-                    studentFromDB.setFirstName(student.getFirstName());
-                    studentFromDB.setLastName(student.getLastName());
-                    studentFromDB.setEmail(student.getEmail());
-                    studentRepository.save(studentFromDB);
-                    return ResponseEntity.ok().body(studentFromDB);
-                }).orElseGet(() -> ResponseEntity.notFound().build());
+    public Student putStudent(@PathVariable Long Id,@Valid @RequestBody Student student) {
+        return studentService.putStudent(Id, student);
     }
-
-
+    @PatchMapping("/id")
+    public Student patchStudent(@PathVariable Long Id, @RequestBody Student student) {
+        return studentService.patchStudent(Id, student);
+    }
 }
