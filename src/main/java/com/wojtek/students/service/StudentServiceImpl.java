@@ -61,7 +61,7 @@ public class StudentServiceImpl implements StudentService {
                     studentFromDB.setEmail(student.getEmail());
                     studentRepository.save(studentFromDB);
                     return studentFromDB;
-                }).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+                }).orElseThrow((  ) -> new StudentException(StudentError.STUDENT_NOT_FOUND));
     }
 
 
