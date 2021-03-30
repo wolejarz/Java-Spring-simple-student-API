@@ -27,8 +27,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     public Student getStudent(Long id) {
-        return studentRepository.findById(id)
+        Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+        if(!Student.Status.ACTIVE.equals(student.getStatus())) {
+            throw new StudentException(StudentError.STUDENT_IS_NOT_ACTIVE);
+        }
+        return student;
     }
 
 
@@ -42,7 +46,8 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id).
                 orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
-        studentRepository.delete(student);
+        student.setStatus(Student.Status.INACTIVE);
+        studentRepository.save(student);
     }
 
     public Student putStudent(Long id, Student student) {
@@ -50,6 +55,7 @@ public class StudentServiceImpl implements StudentService {
                 .map(studentFromDB ->{
                     studentFromDB.setFirstName(student.getFirstName());
                     studentFromDB.setLastName(student.getLastName());
+                    studentFromDB.setStatus(student.getStatus());
                     if(studentRepository.existsByEmail(student.getEmail()))
                         throw new StudentException(StudentError.STUDENT_EMAIL_ALREADY_EXISTS);
                     studentFromDB.setEmail(student.getEmail());
@@ -67,6 +73,9 @@ public class StudentServiceImpl implements StudentService {
                     }
                     if(!StringUtils.isEmpty(student.getLastName())) {
                         studentFromDB.setLastName(student.getLastName());
+                    }
+                    if(!StringUtils.isEmpty(student.getStatus())) {
+                        studentFromDB.setStatus(student.getStatus());
                     }
                     return studentRepository.save(studentFromDB);
                 }).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
